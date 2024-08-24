@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Launch Go Program",
+        "type": "go",
+        "request": "launch",
+        "mode": "debug",
+        "program": "D:/NATHAN/Go Projects/go-lang-mongo/main.go", // Path to the folder where your main.go or your project root is located
+        "cwd": "D:/NATHAN/Go Projects/go-lang-mongo",
+        "env": {}, // Environment variables to set
+        "args": [], // Arguments to pass to the program
+        "restart": true
+      }
+    ]
+  }
