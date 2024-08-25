@@ -10,9 +10,9 @@ import (
 func Router() *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/api/user/create", controllers.CreateAdminUser).Methods(http.MethodPost)
-	r.HandleFunc("/api/user/update", controllers.UpdateAdminUser).Methods(http.MethodPut)
-	r.HandleFunc("/api/user/delete", controllers.DeleteAdminUser).Methods(http.MethodDelete)
-	r.HandleFunc("/api/user/{id}", controllers.GetByIdAdminUser).Methods(http.MethodGet)
+	r.HandleFunc("/api/user/{id}", controllers.UpdateAdminUser).Methods(http.MethodPut)
+	r.HandleFunc("/api/user/{id}", controllers.DeleteAdminUser).Methods(http.MethodDelete)
 	r.HandleFunc("/api/user/all", controllers.GetAllAdminUser).Methods(http.MethodGet)
+	r.HandleFunc("/api/user/{id}", controllers.GetByIdAdminUser).Methods(http.MethodGet)
 	return r
 }
