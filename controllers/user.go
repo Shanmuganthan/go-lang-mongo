@@ -21,7 +21,17 @@ func CreateAdminUser(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
-	fmt.Print("user | CreateAdminUser | Started")
+	log.Print("user | CreateAdminUser | Started")
+
+	userID, ok := r.Context().Value("user_details").(interface{})
+
+	if !ok {
+		log.Println("Someting went wrong")
+		json.NewEncoder(w).Encode(map[string]string{"message": "Sowthing Went Wong"})
+		return
+	}
+
+	log.Println(userID)
 
 	body := r.Body
 	var userModel models.UserModel

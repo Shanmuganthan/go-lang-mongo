@@ -1,10 +1,12 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net/http"
 	"os"
 
+	"github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/Shanmuganthan/go-lang-mongo/router"
@@ -14,6 +16,33 @@ func recoverFromPanic() {
 	if r := recover(); r != nil {
 		fmt.Println("Recovered from panic:", r)
 	}
+}
+
+func LoadEnv() {
+
+	envType := flag.String("env", "development", "Specify the environment type: development, prod, etc.")
+
+	flag.Parse()
+
+	envFile := ".env"
+
+	switch *envType {
+	case "development":
+		envFile = ".env.development"
+	case "production":
+		envFile = ".env.production"
+	default:
+		envFile = ".env"
+	}
+
+	err := godotenv.Load(envFile)
+
+	if err != nil {
+		fmt.Println("Loading Env Issue", err)
+	}
+
+	fmt.Println("Env File Loaded", envFile)
+
 }
 
 func main() {
@@ -27,11 +56,14 @@ func main() {
 
 	r := router.Router()
 
-	err := http.ListenAndServe(":4000", r)
-
 	log.SetOutput(file)
 
+	LoadEnv()
+
+	err := http.ListenAndServe(":4000", r)
+
 	log.Println("Aplication Initalization")
+
 	if err != nil {
 		log.Fatal(fmt.Printf("Server creation Failed ", err))
 	}
@@ -39,7 +71,7 @@ func main() {
 	log.Println("Server Started at 4000")
 
 	defer func() {
-		log.Println("Function is cloisong")
+		log.Println("Application exited")
 	}()
 
 }

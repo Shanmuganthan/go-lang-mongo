@@ -6,14 +6,18 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/Shanmuganthan/go-lang-mongo/common"
 	"github.com/Shanmuganthan/go-lang-mongo/models"
+	"github.com/golang-jwt/jwt/v5"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Content-Type", "application/json")
 
 	log.Println("Login Function Called")
 
@@ -53,6 +57,23 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json.NewEncoder(w).Encode(map[string]string{"message": "Success"})
+	userClaims := models.UserClaims{
+		Id:    userModel.Id.Hex(),
+		Email: userModel.Email,
+		RegisteredClaims: jwt.RegisteredClaims{
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+			ExpiresAt: jwt.NewNumericDate(time.Now().AddDate(0, 7, 0)),
+		},
+	}
+
+	jwtTOken, err := common.GenerateJWTToken(userClaims)
+
+	if err != nil {
+		log.Println("Something went wrong in token genration!", err)
+		json.NewEncoder(w).Encode(map[string]string{"message": "Something went wrong"})
+		return
+	}
+
+	json.NewEncoder(w).Encode(map[string]string{"message": "Success", "token": jwtTOken})
 
 }
